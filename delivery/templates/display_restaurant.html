@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>resturants List for Suvadeep</title>
+</head>
+<body>
+    
+    <!-- {{restaurants}} -->
+    <h1>My Favorite Restaurants</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Picture</th>
+                <th>Name</th>
+                <th>cuisine</th>
+                <th>Rating</th>
+                <th>Other Operations</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for restaurant in restaurants %}
+            <tr>
+                 <td>
+                    <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}" width="100">
+                </td>
+
+                <td>
+                    {{restaurant.name}}
+                </td>
+               
+                <td>
+                    {{restaurant.cuisine}}
+                </td>
+
+                <td>
+                    {{restaurant.rating}}/5
+                </td>
+
+                <td>
+                    <a href="{% url 'open_update_restaurant' restaurant.id %}">Update Resturent Info</a>
+
+                    <br>
+                    <a href="{% url 'delete_restaurant' restaurant.id %}">Delete Restaurant</a>
+                    <br>
+                    <a href="{% url 'view_menu' restaurant.id %}">Update Menu</a>
+                    <br>
+                </td>
+            {% endfor %}
+            </tr>
+            
+        </tbody>
+            
+    </table>
+</body>
+</html>

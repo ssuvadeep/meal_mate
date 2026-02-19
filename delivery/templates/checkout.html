@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>checkout</title>
+</head>
+<body>
+    <h1>Checkout Page for {{username}}</h1>
+    <h2>Total Price: ${{ total_price }}</h2>
+    <p>Thank you for shopping with Meal Mate!</p>
+
+    {% if error %}
+        <p style="color: red;">{{ error }}</p>
+    {% else %}
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Item Image</th>
+                <th>Item Name</th>
+                <th>Description</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>
+                    <img src="{{ item.picture }}" alt="{{ item.name }}" width="100">
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>${{ item.price }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    
+    
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Menu</title>
+</head>
+<body>
+    <h1>Welcome! {{username}}</h1>
+    <h1>Menu for {{ restaurant.name }}</h1>
+    <img src="{{restaurant.picture}}" alt="{{ restaurant.name }}" width="200">
+    <br>
+      <a href="{% url 'show_cart' username %}">Go to cart</a>
+    <br>
+    <br>
+    
+    <table border="1">
+        <thead>
+            <tr>
+
+                <th>Image</th>
+                <th>Item Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Is veg?</th>
+                <th>Operation</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in menu_items %}
+            <tr>
+                <td>
+                    <img src="{{ item.picture }}" alt="{{ item.name }}" width="100">
+                <td>{{ item.name }}</td>
+                <td>{{ item.description }}</td>
+                <td>${{ item.price }}</td>
+                <td>{% if item.is_veg %}Yes{% else %}No{% endif %}</td>
+                <td>
+                    <form method="post" action="{% url 'add_to_cart' item.id username %}">
+                        {% csrf_token %}
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
