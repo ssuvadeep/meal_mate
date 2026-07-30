@@ -1,21 +1,10 @@
-<!-- in this index.html file create welcome message and two buttons one for login and another for signup
-Welcome to Meal Mate! -->
-<!-- <button>Login</button>
-<button>Signup</button> -->
-<!-- code -->
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome page</title>
-</head>
-<body>
-    <!-- <h1>Welcome to Meal Mate</h1>
-    <a href="signin.html"><button>Signin</button></a>
-    <a href="signup.html"><button>Signup</button></a> -->
-    <h1>Welcome to Meal Mate</h1>
-    <a href="{% url 'open_signin' %}"><button>Signin</button></a>
-    <a href="{% url 'open_signup' %}"><button>Signup</button></a>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Welcome — Meal Mate{% endblock %}
+{% block content %}
+<div class="hero">
+    <h1>Good food, delivered by <span>Meal Mate</span></h1>
+    <p>Order from your favorite local restaurants in just a few clicks.</p>
+    <a href="{% url 'open_signin' %}" class="btn">Sign In</a>
+    <a href="{% url 'open_signup' %}" class="btn btn-outline">Sign Up</a>
+</div>
+{% endblock %}

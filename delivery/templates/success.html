@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Success page</title>
-</head>
-<body>
-    <H1>Login Succesfully</H1>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Success — Meal Mate{% endblock %}
+{% block content %}
+<div class="card form-card" style="text-align:center;">
+    <h2>Logged in successfully 🎉</h2>
+    <a href="{% url 'home' %}" class="btn">Continue</a>
+</div>
+{% endblock %}

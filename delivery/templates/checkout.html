@@ -1,42 +1,80 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>checkout</title>
-</head>
-<body>
-    <h1>Checkout Page for {{username}}</h1>
-    <h2>Total Price: ${{ total_price }}</h2>
-    <p>Thank you for shopping with Meal Mate!</p>
+{% extends 'base.html' %}
+{% block title %}Checkout — Meal Mate{% endblock %}
+{% block nav_links %}
+<a href="{% url 'customer_home' username %}">← Restaurants</a>
+<a href="{% url 'order_history' username %}">📦 My Orders</a>
+<a href="{% url 'home' %}">Log Out</a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Checkout</h1>
+</div>
 
-    {% if error %}
-        <p style="color: red;">{{ error }}</p>
-    {% else %}
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item Image</th>
-                <th>Item Name</th>
-                <th>Description</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>
-                    <img src="{{ item.picture }}" alt="{{ item.name }}" width="100">
-                </td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.description }}</td>
-                <td>${{ item.price }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+{% if message %}
+<div class="empty-state">
+    <div class="icon">🛒</div>
+    <p>{{ message }}</p>
+    <a href="{% url 'customer_home' username %}" class="btn">Browse Restaurants</a>
+</div>
 
-    
-    
-</body>
-</html>
+{% elif order_placed %}
+<div class="empty-state">
+    <div class="icon">✅</div>
+    <h2 style="color: #2b2b2b;">Payment successful — order placed!</h2>
+    <p>Thanks for ordering with Meal Mate, {{ username }}. Your total was <strong>₹{{ total_price }}</strong>.</p>
+    <a href="{% url 'customer_home' username %}" class="btn">Back to Restaurants</a>
+</div>
+
+{% else %}
+    {% for ci in cart_items %}
+    <div class="cart-item">
+        <img src="{{ ci.MenuItem.picture }}" alt="{{ ci.MenuItem.name }}">
+        <div class="info">
+            <h4>{{ ci.MenuItem.name }} × {{ ci.quantity }}</h4>
+            <p>₹{{ ci.MenuItem.price }} each · Line total: ₹{{ ci.line_total }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="cart-summary">
+        <div class="total">Total: <span>₹{{ total_price }}</span></div>
+        <button id="rzp-button" class="btn">Pay Now</button>
+    </div>
+
+    <form id="payment-form" method="post" action="{% url 'payment_success' username %}" style="display:none;">
+        {% csrf_token %}
+        <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+        <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+        <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+    </form>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        document.getElementById('rzp-button').onclick = function (e) {
+            e.preventDefault();
+            var options = {
+                "key": "{{ razorpay_key_id }}",
+                "amount": "{{ amount_in_paise }}",
+                "currency": "INR",
+                "name": "Meal Mate",
+                "description": "Food order payment",
+                "order_id": "{{ razorpay_order_id }}",
+                "handler": function (response) {
+                    document.getElementById('razorpay_payment_id').value = response.razorpay_payment_id;
+                    document.getElementById('razorpay_order_id').value = response.razorpay_order_id;
+                    document.getElementById('razorpay_signature').value = response.razorpay_signature;
+                    document.getElementById('payment-form').submit();
+                },
+                "prefill": {
+                    "name": "{{ username }}"
+                },
+                "theme": {
+                    "color": "#ff5722"
+                }
+            };
+            var rzp = new Razorpay(options);
+            rzp.open();
+        };
+    </script>
+{% endif %}
+{% endblock %}

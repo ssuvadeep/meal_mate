@@ -1,45 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go to Cart</title>
-</head>
-<body>
-    <h1>Go to cart {{username}}</h1>
+{% extends 'base.html' %}
+{% block title %}Your Cart — Meal Mate{% endblock %}
+{% block nav_links %}
+<a href="{% url 'customer_home' username %}">← Restaurants</a>
+<a href="{% url 'order_history' username %}">📦 My Orders</a>
+<a href="{% url 'home' %}">Log Out</a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>Your Cart</h1>
+</div>
 
-      <h2> Total Price : {{total}}</h2>
+{% if cart_items %}
+    {% for ci in cart_items %}
+    <div class="cart-item">
+        <img src="{{ ci.MenuItem.picture }}" alt="{{ ci.MenuItem.name }}">
+        <div class="info">
+            <h4>{{ ci.MenuItem.name }}</h4>
+            <p>${{ ci.MenuItem.price }} each · Line total: ${{ ci.line_total }}</p>
+        </div>
 
-        <form action="{% url 'checkout' username %}">
-            <input type="submit" value="CHECK OUT">
+        <div class="qty-controls">
+            <form method="post" action="{% url 'decrease_cart_item' ci.MenuItem.id username %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-secondary">−</button>
+            </form>
+            <span class="qty-value">{{ ci.quantity }}</span>
+            <form method="post" action="{% url 'increase_cart_item' ci.MenuItem.id username %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-secondary">+</button>
+            </form>
+        </div>
+
+        <form method="post" action="{% url 'remove_from_cart' ci.MenuItem.id username %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
         </form>
+    </div>
+    {% endfor %}
 
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Item Image</th>
-                <th>Item Name</th>
-                <th>Description</th>
-                <th>Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in items %}
-            <tr>
-                <td>
-                    <img src="{{ item.picture }}" alt="{{ item.name }}" width="100">
-                </td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.description }}</td>
-                <td>${{ item.price }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-      
-    
-    </table>
-     
-
-    
-</body>
-</html>
+    <div class="cart-summary">
+        <div class="total">Total: <span>${{ total }}</span></div>
+        <a href="{% url 'checkout' username %}" class="btn">Proceed to Checkout</a>
+    </div>
+{% else %}
+<div class="empty-state">
+    <div class="icon">🛒</div>
+    <p>Your cart is empty.</p>
+    <a href="{% url 'customer_home' username %}" class="btn">Browse Restaurants</a>
+</div>
+{% endif %}
+{% endblock %}

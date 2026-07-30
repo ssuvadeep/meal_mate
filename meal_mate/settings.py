@@ -25,8 +25,10 @@ SECRET_KEY = 'django-insecure-^6k^w7&c&uoa9pma^be&it@=a202q1kydb1q_!3az2d_arfq#&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+RAZORPAY_KEY_ID = "rzp_test_THDPpUmEjzSTn1"
+RAZORPAY_KEY_SECRET = "secret_key"
 
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -105,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Kolkata'
 
 USE_I18N = True
 

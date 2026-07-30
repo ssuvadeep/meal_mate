@@ -1,47 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>customer home page</title>
-</head>
-<body>
-    <h1>Welcome, {{ username }}! Your All Favreate Restaurent </h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Picture</th>
-                <th>Name</th>
-                <th>cuisine</th>
-                <th>Rating</th>
-                <th>Other Operations</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for restaurant in restaurants %}
-            <tr>
-                 <td>
-                    <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}" width="100">
-                </td>
+{% extends 'base.html' %}
+{% block title %}Restaurants — Meal Mate{% endblock %}
+{% block nav_links %}
+<a href="{% url 'show_cart' username %}">🛒 Cart</a>
+<a href="{% url 'order_history' username %}">📦 My Orders</a>
+<a href="{% url 'home' %}">Log Out</a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <div>
+        <h1>Welcome, {{ username }} 👋</h1>
+        <div class="sub">All your favorite restaurants, in one place</div>
+    </div>
+</div>
 
-                <td>
-                    {{restaurant.name}}
-                </td>
-               
-                <td>
-                    {{restaurant.cuisine}}
-                </td>
+<form method="get" action="{% url 'customer_home' username %}" class="search-bar">
+    <input type="text" name="q" placeholder="Search restaurants or cuisines..." value="{{ query|default:'' }}">
+    <button type="submit" class="btn">Search</button>
+</form>
 
-                <td>
-                    {{restaurant.rating}}/5
-                </td>
-
-                <td>
-                    <a href="{% url 'customer_view_menu' restaurant.id username %}">View Menu</a>
-                    <br>
-                </td>
-            {% endfor %}
-            </tr>
-        </table>
-</body>
+{% if restaurants %}
+<div class="grid">
+    {% for restaurant in restaurants %}
+    <div class="tile">
+        <img src="{{ restaurant.picture }}" alt="{{ restaurant.name }}">
+        <div class="tile-body">
+            <h3>{{ restaurant.name }}</h3>
+            <div class="tile-meta">
+                <span class="badge">{{ restaurant.cuisine }}</span>
+                <span class="rating">★ {{ restaurant.rating }}/5</span>
+            </div>
+            <div class="tile-actions">
+                <a href="{% url 'customer_view_menu' restaurant.id username %}" class="btn btn-sm">View Menu</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="icon">🔍</div>
+    <p>No restaurants matched "{{ query }}".</p>
+    <a href="{% url 'customer_home' username %}" class="btn btn-outline">Clear Search</a>
+</div>
+{% endif %}
+{% endblock %}
 </html>

@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>admin home page</title>
-</head>
-<body>
-    <h1>Welcome ADMIN</h1>
-    <a href="add_restaurant_page">Add new Resturant</a>
-    <br>
-    <a href="view_restaurant_page">View Resturant</a>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Admin Dashboard — Meal Mate{% endblock %}
+{% block nav_links %}
+<span>Admin Panel</span>
+<a href="{% url 'home' %}">Log Out</a>
+{% endblock %}
+{% block content %}
+<div class="hero" style="padding: 60px 20px;">
+    <h1>Welcome, <span>Admin</span></h1>
+    <p>Manage your restaurants and menus from here.</p>
+    <a href="{% url 'add_restaurant_page' %}" class="btn">+ Add New Restaurant</a>
+    <a href="{% url 'view_restaurant_page' %}" class="btn btn-outline">View All Restaurants</a>
+</div>
+{% endblock %}

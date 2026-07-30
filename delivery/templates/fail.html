@@ -1,11 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fail page</title>
-</head>
-<body>
-    <h1>User login is faild </h1>
-</body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Login Failed — Meal Mate{% endblock %}
+{% block content %}
+<div class="card form-card" style="text-align:center;">
+    <h2>Login failed</h2>
+    <p style="color: #6b6b6b;">We couldn't find an account with that username and password.</p>
+    <a href="{% url 'open_signin' %}" class="btn">Try Again</a>
+    <a href="{% url 'open_signup' %}" class="btn btn-outline">Create an Account</a>
+</div>
+{% endblock %}

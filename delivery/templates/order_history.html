@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}My Orders — Meal Mate{% endblock %}
+{% block nav_links %}
+<a href="{% url 'customer_home' username %}">← Restaurants</a>
+<a href="{% url 'show_cart' username %}">🛒 Cart</a>
+<a href="{% url 'home' %}">Log Out</a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>My Orders</h1>
+</div>
+
+{% if orders %}
+    {% for order in orders %}
+    <div class="card" style="margin-bottom: 18px;">
+        <div class="page-header" style="margin-bottom: 12px;">
+            <div>
+                <h3 style="margin: 0;">Order #{{ order.id }}</h3>
+                <div class="sub">{{ order.placed_at|date:"d M Y, h:i A" }}</div>
+            </div>
+            <div class="total">₹{{ order.total_price }}</div>
+        </div>
+        {% for item in order.items.all %}
+        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #ececec; font-size: 0.9rem;">
+            <span>{{ item.menu_item_name }} × {{ item.quantity }}</span>
+            <span>₹{{ item.line_total }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% else %}
+<div class="empty-state">
+    <div class="icon">📦</div>
+    <p>You haven't placed any orders yet.</p>
+    <a href="{% url 'customer_home' username %}" class="btn">Browse Restaurants</a>
+</div>
+{% endif %}
+{% endblock %}

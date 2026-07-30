@@ -24,10 +24,35 @@ class MenuItem(models.Model):
 
 class CartItem(models.Model):
     Customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='cart_items')
-    MenuItem = models.ManyToManyField("MenuItem", related_name='cart_items')
+    MenuItem = models.ForeignKey(MenuItem, on_delete=models.CASCADE, related_name='cart_items')
+    quantity = models.PositiveIntegerField(default=1)
 
-    def total_price(self):
-        return sum(MenuItem.price for MenuItem in self.MenuItem.all())
+    class Meta:
+        unique_together = ('Customer', 'MenuItem')
 
-    
+    def line_total(self):
+        return self.MenuItem.price * self.quantity
 
+
+class Order(models.Model):
+    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='orders')
+    total_price = models.DecimalField(max_digits=8, decimal_places=2)
+    razorpay_order_id = models.CharField(max_length=100, blank=True)
+    razorpay_payment_id = models.CharField(max_length=100, blank=True)
+    placed_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-placed_at']
+
+    def __str__(self):
+        return f"Order #{self.id} by {self.customer.username}"
+
+
+class OrderItem(models.Model):
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
+    menu_item_name = models.CharField(max_length=100)
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+
+    def line_total(self):
+        return self.price * self.quantity
