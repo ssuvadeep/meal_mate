@@ -53,9 +53,8 @@ MealMate lets customers browse restaurants, search by cuisine, manage a cart, an
 
 ## 📸 Screenshots
 
-<!-- Add screenshots here once you have them, like this:
-<img src="link-to-screenshot.png" width="700">
--->
+<img width="1917" height="867" alt="image" src="https://github.com/user-attachments/assets/8a4d9a0b-49e0-43d7-abaa-5267635b08ba" />
+
 
 <br>
 
